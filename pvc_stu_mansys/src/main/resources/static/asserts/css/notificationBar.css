@@ -1,0 +1,23 @@
+
+/*
+ 通知栏样式
+ */
+#notificationBar{
+    width:700px;
+    height:auto;
+    background-color: #303334;
+    padding: 11px;
+}
+/* 通知栏里的通知header样式 */
+.notification-header{
+    color: white;
+}
+/* 通知栏里的通知item样式 */
+.notification-item {
+    color: #2C5167;
+    font-size: 15px;
+    background-color: #494E53;
+}
+/* 根据需求设置浮动层大小，当然浮动层里还可以布局更细布局 */
+#n{margin:10px auto; width:920px; border:1px solid #CCC;font-size:12px; line-height:30px;}
+#n a{ padding:0 4px; color:#333}

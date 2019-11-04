@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenu.pvcstumansys.db.mapper.ProfcategoryMapper">
+  <resultMap id="BaseResultMap" type="com.chenu.pvcstumansys.db.bean.Profcategory">
+    <constructor>
+      <idArg column="p_profcatid" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="note" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    p_profcatid, name, note
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from profcategory
+    where p_profcatid = #{pProfcatid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from profcategory
+    where p_profcatid = #{pProfcatid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="p_profcatid" keyProperty="pProfcatid" parameterType="com.chenu.pvcstumansys.db.bean.Profcategory" useGeneratedKeys="true">
+    insert into profcategory (name, note)
+    values (#{name,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="p_profcatid" keyProperty="pProfcatid" parameterType="com.chenu.pvcstumansys.db.bean.Profcategory" useGeneratedKeys="true">
+    insert into profcategory
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        name,
+      </if>
+      <if test="note != null">
+        note,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null">
+        #{note,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chenu.pvcstumansys.db.bean.Profcategory">
+    update profcategory
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null">
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where p_profcatid = #{pProfcatid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chenu.pvcstumansys.db.bean.Profcategory">
+    update profcategory
+    set name = #{name,jdbcType=VARCHAR},
+      note = #{note,jdbcType=VARCHAR}
+    where p_profcatid = #{pProfcatid,jdbcType=INTEGER}
+  </update>
+
+  <!-- 查询所有 -->
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from profcategory
+  </select>
+
+</mapper>

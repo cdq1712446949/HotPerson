@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenu.pvcstumansys.db.mapper.StudentMapper">
+  <resultMap id="BaseResultMap" type="com.chenu.pvcstumansys.db.bean.Student">
+    <constructor>
+      <idArg column="p_stuid" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="code" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="name" javaType="java.lang.String" jdbcType="CHAR" />
+      <arg column="idnumber" javaType="java.lang.String" jdbcType="CHAR" />
+      <arg column="picture" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="gender" javaType="java.lang.Byte" jdbcType="BIT" />
+      <arg column="age" javaType="java.lang.Byte" jdbcType="TINYINT" />
+      <arg column="homeadd" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="phone" javaType="java.lang.String" jdbcType="CHAR" />
+      <arg column="f_school" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="enrolltime" javaType="java.util.Date" jdbcType="DATE" />
+      <arg column="scho_year_sys" javaType="java.lang.Byte" jdbcType="TINYINT" />
+      <arg column="graduatime" javaType="java.util.Date" jdbcType="DATE" />
+      <arg column="diploma" javaType="java.lang.Byte" jdbcType="BIT" />
+      <arg column="f_professional" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    p_stuid, code, name, idnumber, picture, gender, age, homeadd, phone, f_school, enrolltime,
+    scho_year_sys, graduatime, diploma, f_professional
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from student
+    where p_stuid = #{pStuid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from student
+    where p_stuid = #{pStuid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" keyColumn="p_stuid" keyProperty="pStuid" parameterType="com.chenu.pvcstumansys.db.bean.Student" useGeneratedKeys="true">
+    insert into student (code, name, idnumber,
+      picture, gender, age, homeadd,
+      phone, f_school, enrolltime,
+      scho_year_sys, graduatime, diploma,
+      f_professional)
+    values (#{code,jdbcType=VARCHAR}, #{name,jdbcType=CHAR}, #{idnumber,jdbcType=CHAR},
+      #{picture,jdbcType=VARCHAR}, #{gender,jdbcType=BIT}, #{age,jdbcType=TINYINT}, #{homeadd,jdbcType=VARCHAR},
+      #{phone,jdbcType=CHAR}, #{fSchool,jdbcType=INTEGER}, #{enrolltime,jdbcType=DATE},
+      #{schoYearSys,jdbcType=TINYINT}, #{graduatime,jdbcType=DATE}, #{diploma,jdbcType=BIT},
+      #{fProfessional,jdbcType=INTEGER})
+  </insert>
+
+  <insert id="insertMy" parameterType="com.chenu.pvcstumansys.db.bean.Student">
+    insert into student (p_stuid, code, name, idnumber,
+      picture, gender, age, homeadd,
+      phone, f_school, enrolltime,
+      scho_year_sys, graduatime, diploma,
+      f_professional)
+    values (#{pStuid}, #{code,jdbcType=VARCHAR}, #{name,jdbcType=CHAR}, #{idnumber,jdbcType=CHAR},
+      #{picture,jdbcType=VARCHAR}, #{gender,jdbcType=BIT}, #{age,jdbcType=TINYINT}, #{homeadd,jdbcType=VARCHAR},
+      #{phone,jdbcType=CHAR}, #{fSchool,jdbcType=INTEGER}, #{enrolltime,jdbcType=DATE},
+      #{schoYearSys,jdbcType=TINYINT}, #{graduatime,jdbcType=DATE}, #{diploma,jdbcType=BIT},
+      #{fProfessional,jdbcType=INTEGER})
+  </insert>
+
+  <insert id="insertSelective" keyColumn="p_stuid" keyProperty="pStuid" parameterType="com.chenu.pvcstumansys.db.bean.Student" useGeneratedKeys="true">
+    insert into student
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="p_stuid != null">
+        p_stuid,
+      </if>
+      <if test="code != null">
+        code,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="idnumber != null">
+        idnumber,
+      </if>
+      <if test="picture != null">
+        picture,
+      </if>
+      <if test="gender != null">
+        gender,
+      </if>
+      <if test="age != null">
+        age,
+      </if>
+      <if test="homeadd != null">
+        homeadd,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="fSchool != null">
+        f_school,
+      </if>
+      <if test="enrolltime != null">
+        enrolltime,
+      </if>
+      <if test="schoYearSys != null">
+        scho_year_sys,
+      </if>
+      <if test="graduatime != null">
+        graduatime,
+      </if>
+      <if test="diploma != null">
+        diploma,
+      </if>
+      <if test="fProfessional != null">
+        f_professional,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="p_stuid != null">
+        #{p_stuid,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=CHAR},
+      </if>
+      <if test="idnumber != null">
+        #{idnumber,jdbcType=CHAR},
+      </if>
+      <if test="picture != null">
+        #{picture,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        #{gender,jdbcType=BIT},
+      </if>
+      <if test="age != null">
+        #{age,jdbcType=TINYINT},
+      </if>
+      <if test="homeadd != null">
+        #{homeadd,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=CHAR},
+      </if>
+      <if test="fSchool != null">
+        #{fSchool,jdbcType=INTEGER},
+      </if>
+      <if test="enrolltime != null">
+        #{enrolltime,jdbcType=DATE},
+      </if>
+      <if test="schoYearSys != null">
+        #{schoYearSys,jdbcType=TINYINT},
+      </if>
+      <if test="graduatime != null">
+        #{graduatime,jdbcType=DATE},
+      </if>
+      <if test="diploma != null">
+        #{diploma,jdbcType=BIT},
+      </if>
+      <if test="fProfessional != null">
+        #{fProfessional,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chenu.pvcstumansys.db.bean.Student">
+    update student
+    <set>
+      <if test="code != null">
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=CHAR},
+      </if>
+      <if test="idnumber != null">
+        idnumber = #{idnumber,jdbcType=CHAR},
+      </if>
+      <if test="picture != null">
+        picture = #{picture,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        gender = #{gender,jdbcType=BIT},
+      </if>
+      <if test="age != null">
+        age = #{age,jdbcType=TINYINT},
+      </if>
+      <if test="homeadd != null">
+        homeadd = #{homeadd,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=CHAR},
+      </if>
+      <if test="fSchool != null">
+        f_school = #{fSchool,jdbcType=INTEGER},
+      </if>
+      <if test="enrolltime != null">
+        enrolltime = #{enrolltime,jdbcType=DATE},
+      </if>
+      <if test="schoYearSys != null">
+        scho_year_sys = #{schoYearSys,jdbcType=TINYINT},
+      </if>
+      <if test="graduatime != null">
+        graduatime = #{graduatime,jdbcType=DATE},
+      </if>
+      <if test="diploma != null">
+        diploma = #{diploma,jdbcType=BIT},
+      </if>
+      <if test="fProfessional != null">
+        f_professional = #{fProfessional,jdbcType=INTEGER},
+      </if>
+    </set>
+    where p_stuid = #{pStuid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chenu.pvcstumansys.db.bean.Student">
+    update student
+    set code = #{code,jdbcType=VARCHAR},
+      name = #{name,jdbcType=CHAR},
+      idnumber = #{idnumber,jdbcType=CHAR},
+      picture = #{picture,jdbcType=VARCHAR},
+      gender = #{gender,jdbcType=BIT},
+      age = #{age,jdbcType=TINYINT},
+      homeadd = #{homeadd,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=CHAR},
+      f_school = #{fSchool,jdbcType=INTEGER},
+      enrolltime = #{enrolltime,jdbcType=DATE},
+      scho_year_sys = #{schoYearSys,jdbcType=TINYINT},
+      graduatime = #{graduatime,jdbcType=DATE},
+      diploma = #{diploma,jdbcType=BIT},
+      f_professional = #{fProfessional,jdbcType=INTEGER}
+    where p_stuid = #{pStuid,jdbcType=VARCHAR}
+  </update>
+
+  <!-- 查询所有 -->
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from student
+  </select>
+
+  <select id="selectAllBySchool" parameterType="java.lang.Integer"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from student
+    where f_school = #{schoolId}
+  </select>
+
+  <!--组合查询-->
+  <select id="selectStudentByInfo" parameterType="com.chenu.pvcstumansys.db.bean.Student" resultType="com.chenu.pvcstumansys.db.bean.Student">
+    select
+    <include refid="Base_Column_List" />
+    from student as s
+    <where>
+      <if test="name != null">and  s.name like '%${name}%'</if>
+      <if test="gender != null">and s.gender=#{gender}</if>
+      <if test="fSchool != null">and s.f_school=#{fSchool}</if>
+      <if test="fProfessional != null">and s.f_professional=#{fProfessional}</if>
+      <if test="diploma != null">and s.diploma=#{diploma}</if>
+      <if test="enrolltime != null">and year(s.enrolltime)=year(#{enrolltime})</if>
+      <if test="graduatime != null">and year(s.graduatime)=year(#{graduatime})</if>
+      <if test="schoYearSys != null">and s.scho_year_sys=#{schoYearSys}</if>
+    </where>
+  </select>
+
+</mapper>

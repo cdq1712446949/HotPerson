@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenu.pvcstumansys.db.mapper.UserMapper">
+  <resultMap id="BaseResultMap" type="com.chenu.pvcstumansys.db.bean.User">
+    <constructor>
+      <idArg column="p_uid" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="pwd" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="role" javaType="java.lang.Byte" jdbcType="BIT" />
+      <arg column="privilege" javaType="java.lang.Byte" jdbcType="BIT" />
+      <arg column="f_info" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    p_uid, name, pwd, role, privilege, f_info
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where p_uid = #{pUid,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where name = #{username}
+  </select>
+
+  <select id="login" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where name = #{username} and pwd = #{password}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from user
+    where p_uid = #{pUid,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" keyColumn="p_uid" keyProperty="pUid" parameterType="com.chenu.pvcstumansys.db.bean.User" useGeneratedKeys="true">
+    insert into user (name, pwd, role, 
+      privilege, f_info)
+    values (#{name,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, #{role,jdbcType=BIT}, 
+      #{privilege,jdbcType=BIT}, #{fInfo,jdbcType=INTEGER})
+  </insert>
+
+  <insert id="insertSelective" keyColumn="p_uid" keyProperty="pUid" parameterType="com.chenu.pvcstumansys.db.bean.User" useGeneratedKeys="true">
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        name,
+      </if>
+      <if test="pwd != null">
+        pwd,
+      </if>
+      <if test="role != null">
+        role,
+      </if>
+      <if test="privilege != null">
+        privilege,
+      </if>
+      <if test="fInfo != null">
+        f_info,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null">
+        #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="role != null">
+        #{role,jdbcType=BIT},
+      </if>
+      <if test="privilege != null">
+        #{privilege,jdbcType=BIT},
+      </if>
+      <if test="fInfo != null">
+        #{fInfo,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.chenu.pvcstumansys.db.bean.User">
+    update user
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null">
+        pwd = #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="role != null">
+        role = #{role,jdbcType=BIT},
+      </if>
+      <if test="privilege != null">
+        privilege = #{privilege,jdbcType=BIT},
+      </if>
+      <if test="fInfo != null">
+        f_info = #{fInfo,jdbcType=INTEGER},
+      </if>
+    </set>
+    where p_uid = #{pUid,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.chenu.pvcstumansys.db.bean.User">
+    update user
+    set name = #{name,jdbcType=VARCHAR},
+      pwd = #{pwd,jdbcType=VARCHAR},
+      role = #{role,jdbcType=BIT},
+      privilege = #{privilege,jdbcType=BIT},
+      f_info = #{fInfo,jdbcType=INTEGER}
+    where p_uid = #{pUid,jdbcType=INTEGER}
+  </update>
+
+  <!-- 查询所有 -->
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user
+  </select>
+
+  <!-- 查询所有根据权限 -->
+  <select id="selectAllByPrivilege" parameterType="java.lang.Byte" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where privilege = #{privilege}
+  </select>
+
+  <!-- 查询所有超级用户 -->
+  <select id="selectAllOnlyRoot" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where role = 0
+  </select>
+
+  <!-- 查询所有超级用户根据权限 -->
+  <select id="selectAllOnlyRootByPrivilege" parameterType="java.lang.Byte" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where role = 0
+    and privilege = #{privilege}
+  </select>
+
+  <!-- 查询除了root用户的所有，根据权限 -->
+  <select id="selectAllNotRootByPrivilege" parameterType="java.lang.Byte" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where role != 0
+    and privilege = #{privilege}
+  </select>
+
+  <!-- 查询除了root用户的所有 -->
+  <select id="selectAllNotRoot" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where role != 0
+  </select>
+
+  <!-- 查询除了root用户的所有，根据学校 -->
+  <select id="selectAllNotRootBySchool" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    , uinfo.p_ufid, uinfo.f_school, uinfo.position, uinfo.phone
+    from user,uinfo
+    where f_info = uinfo.p_ufid
+    and role != 0
+    and uinfo.f_school = #{schoolId};
+  </select>
+
+</mapper>

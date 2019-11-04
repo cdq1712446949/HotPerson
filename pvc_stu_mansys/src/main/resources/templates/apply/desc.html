@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Dashboard Template for Bootstrap</title>
+    <!-- 小图标 -->
+    <link rel="shortcut icon" th:href="@{/resources/favicon.ico}"/>
+    <link rel="bookmark" th:href="@{/resources/favicon.ico}"/>
+
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.css}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link th:href="@{/asserts/css/dashboard.css}" rel="stylesheet">
+    <!-- 通知栏样式 -->
+    <link th:href="@{/asserts/css/notificationBar.css}" rel="stylesheet">
+</head>
+
+<body>
+<!-- 引入顶部栏 -->
+<div th:replace="commons/bar::topbar"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 引入通知栏 -->
+        <div th:replace="commons/bar::NotificationBar"></div>
+
+        <!-- 引入侧边栏 -->
+        <div th:replace="commons/bar::#sidebar(activeUri='apply_man')"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <h2>申请详情</h2>
+            <hr>
+            <input type="hidden" name="pApplid" th:value="${apply.pApplid}">
+            <div class="form-group">
+                <h3>备注信息</h3>
+                <h5><font color="#7fffd4">[[${apply.note}]]</font></h5>
+            </div>
+            <div class="form-group">
+                <h3>申请用户信息</h3>
+                <p>用户名称：[[${apply.message.userSource.name}]]</p>
+                <p>用户编号：[[${apply.message.userSource.pUid}]]</p>
+                <p>用户权限：校级管理员</p>
+                <p>用户学校：[[${apply.message.userSource.uinfo.school.name}]]</p>
+            </div>
+            <div class="form-group">
+                <h3>数据信息</h3>
+                <!-- 专业 -->
+                <div th:if="${apply.message.toService == 1}">
+                    <p>专业类别：[[${data.profcategory.name}]]</p>
+                    <p>专业名称：[[${data.name}]]</p>
+                </div>
+
+                <!-- 学籍 -->
+                <div th:if="${apply.message.toService == 4}">
+                    <p>学籍号：[[${data.pStuid}]]</p>
+                    <p>在校学号：[[${data.code}]]</p>
+                    <p>名字：[[${data.name}]]</p>
+                    <p>身份证号：[[${data.idnumber}]]</p>
+                    <p>本人头像：[[${data.picture}]]</p>
+                    <p>性别：[[${data.gender}]]</p>
+                    <p>年龄：[[${data.age}]]</p>
+                    <p>家庭住址：[[${data.homeadd}]]</p>
+                    <p>联系电话：[[${data.phone}]]</p>
+                    <p>所在学校：[[${data.school.name}]]</p>
+                    <p>入学时间：[[${#dates.format(data.enrolltime, 'yyyy-MM-dd')}]]</p>
+                    <p>学年制：[[${data.schoYearSys}]]</p>
+                    <p>毕业时间：[[${#dates.format(data.graduatime, 'yyyy-MM-dd')}]]</p>
+                    <p>文凭：[[${data.diploma}]]</p>
+                    <p>所学专业：[[${data.professional.name}]]</p>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <h3>处理信息</h3>
+                <p>处理状态：[[${apply.state == 0 ? '未处理' : '已处理'}]]</p>
+                <p th:if="${apply.state == 1}">处理结果：[[${apply.result == 0 ? '拒绝' : '同意'}]]</p>
+            </div>
+
+            <hr>
+
+            <button class="btn btn-success" th:if="${apply.state == 0}"
+                    th:onclick="'return accessApply(' + ${session.login_usrid} + ',' + '\'' + ${_csrf.token} + '\'' + ','  + ${apply.pApplid} + ')'">同意</button>
+            <button class="btn btn-danger" th:if="${apply.state == 0}"
+                    th:onclick="'return rejectApply(' + ${session.login_usrid} + ',' + '\'' + ${_csrf.token} + '\'' + ','  + ${apply.pApplid} + ')'">拒绝</button>
+            <button class="btn btn-danger" th:if="${apply.state == 1}"
+                    th:onclick="'return applyRm(' + ${session.login_usrid} + ',' + '\'' + ${_csrf.token} + '\'' + ','  + ${apply.pApplid} + ')'">删除</button>
+
+            <div>
+                &nbsp;
+                &nbsp;
+                &nbsp;
+            </div>
+
+        </main>
+        <form id="deleteEmpForm" method="post">
+            <input type="hidden" name="_method" value="delete">
+        </form>
+    </div>
+</div>
+
+<!-- 引入公共的js  -->
+<div th:replace="commons/js::js"></div>
+<!-- 自定义的js -->
+<script type="text/javascript" th:src="@{/asserts/js/apply.js}" ></script>
+
+</body>
+</html>

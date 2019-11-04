@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Dashboard Template for Bootstrap</title>
+    <!-- 小图标 -->
+    <link rel="shortcut icon" th:href="@{/resources/favicon.ico}"/>
+    <link rel="bookmark" th:href="@{/resources/favicon.ico}"/>
+
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.css}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link th:href="@{/asserts/css/dashboard.css}" rel="stylesheet">
+    <!-- 通知栏样式 -->
+    <link th:href="@{/asserts/css/notificationBar.css}" rel="stylesheet">
+</head>
+
+<body>
+<!-- 引入顶部栏 -->
+<div th:replace="commons/bar::topbar"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 引入通知栏 -->
+        <div th:replace="commons/bar::NotificationBar"></div>
+
+        <!-- 引入侧边栏 -->
+        <div th:replace="commons/bar::#sidebar(activeUri='sch2prof_man')"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <h2 th:text="${editSch2prof != null} ? '学校专业编辑' : '学校专业添加'">学校专业添加</h2>
+            <a href="#" onclick="return noProfView( $('#user_source').val(), $('#token').val() )">没有贵校的专业？</a>
+            <hr>
+            <input type="hidden" name="pSchProfId" th:if="${editSch2prof != null}" th:value="${editSch2prof.pSchProfId}">
+            <input type="hidden" name="fSchool" th:if="${session.login_usr_privilege == 1 && userSourceSchool != null}" th:value="${userSourceSchool.pSchid}">
+            <div class="form-group" th:if="${session.login_user_role == 1 && session.login_usr_privilege == 0}">
+                <label>School</label>
+                <select class="form-control" th:name="editProf.fProfcategory" id="school_select">
+                    <option th:selected="${editSch2prof != null} ? ${editSch2prof.fSchool == school.pSchid}"
+                            th:value="${school.pSchid}" th:each="school : ${schoolList}" th:text="${school.name}">
+                        Default
+                    </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Professional</label>
+                <!-- 提交的是 专业 的id -->
+                <select class="form-control" th:name="editProf.fProfcategory" id="sch2prof_prof_select">
+                    <option th:selected="${editSch2prof != null} ? ${editSch2prof.fProfessional == prof.pProfid}"
+                            th:value="${prof.pProfid}" th:each="prof : ${professionalList}" th:text="${prof.name}">
+                        Default
+                    </option>
+                </select>
+            </div>
+            <!-- 省级按钮 -->
+            <button  type="submit" class="btn btn-primary" onclick="return sch2profSaveOrUpdateBySheng($('#user_source').val(), $('#token').val())"
+                     th:if="${session.login_user_role == 1 && session.login_usr_privilege == 0}"
+                     th:text="${editSch2prof != null} ? '修改' : '添加'">添加</button>
+            <!-- 校级按钮 -->
+            <button  type="submit" class="btn btn-primary" onclick="return sch2profSaveOrUpdateByXiao($('#user_source').val(), $('#token').val())"
+                     th:if="${session.login_user_role == 1 && session.login_usr_privilege == 1}"
+                     th:text="${editSch2prof != null} ? '修改' : '添加'">添加</button>
+
+
+        </main>
+
+    </div>
+</div>
+
+<!-- 引入公共的js  -->
+<div th:replace="commons/js::js"></div>
+<!-- 自定义的js -->
+<script type="text/javascript" th:src="@{/asserts/js/sch2prof.js}" ></script>
+
+
+</body>
+</html>

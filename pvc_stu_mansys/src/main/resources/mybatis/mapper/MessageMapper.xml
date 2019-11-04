@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenu.pvcstumansys.db.mapper.MessageMapper">
+  <resultMap id="BaseResultMap" type="com.chenu.pvcstumansys.db.bean.Message">
+    <constructor>
+      <idArg column="p_messid" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="f_user_source" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="messtype" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="data" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="has_view" javaType="java.lang.Byte" jdbcType="BIT" />
+      <arg column="to_service" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    p_messid, f_user_source, messtype, data, has_view, to_service
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from message
+    where p_messid = #{pMessid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from message
+    where p_messid = #{pMessid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="p_messid" keyProperty="pMessid" parameterType="com.chenu.pvcstumansys.db.bean.Message" useGeneratedKeys="true">
+    insert into message (f_user_source, messtype, data, 
+      has_view, to_service)
+    values (#{fUserSource,jdbcType=INTEGER}, #{messtype,jdbcType=INTEGER}, #{data,jdbcType=VARCHAR}, 
+      #{hasView,jdbcType=BIT}, #{toService,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" keyColumn="p_messid" keyProperty="pMessid" parameterType="com.chenu.pvcstumansys.db.bean.Message" useGeneratedKeys="true">
+    insert into message
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="fUserSource != null">
+        f_user_source,
+      </if>
+      <if test="messtype != null">
+        messtype,
+      </if>
+      <if test="data != null">
+        data,
+      </if>
+      <if test="hasView != null">
+        has_view,
+      </if>
+      <if test="toService != null">
+        to_service,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="fUserSource != null">
+        #{fUserSource,jdbcType=INTEGER},
+      </if>
+      <if test="messtype != null">
+        #{messtype,jdbcType=INTEGER},
+      </if>
+      <if test="data != null">
+        #{data,jdbcType=VARCHAR},
+      </if>
+      <if test="hasView != null">
+        #{hasView,jdbcType=BIT},
+      </if>
+      <if test="toService != null">
+        #{toService,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chenu.pvcstumansys.db.bean.Message">
+    update message
+    <set>
+      <if test="fUserSource != null">
+        f_user_source = #{fUserSource,jdbcType=INTEGER},
+      </if>
+      <if test="messtype != null">
+        messtype = #{messtype,jdbcType=INTEGER},
+      </if>
+      <if test="data != null">
+        data = #{data,jdbcType=VARCHAR},
+      </if>
+      <if test="hasView != null">
+        has_view = #{hasView,jdbcType=BIT},
+      </if>
+      <if test="toService != null">
+        to_service = #{toService,jdbcType=INTEGER},
+      </if>
+    </set>
+    where p_messid = #{pMessid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chenu.pvcstumansys.db.bean.Message">
+    update message
+    set f_user_source = #{fUserSource,jdbcType=INTEGER},
+      messtype = #{messtype,jdbcType=INTEGER},
+      data = #{data,jdbcType=VARCHAR},
+      has_view = #{hasView,jdbcType=BIT},
+      to_service = #{toService,jdbcType=INTEGER}
+    where p_messid = #{pMessid,jdbcType=INTEGER}
+  </update>
+
+  <!-- 查询所有 -->
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from message
+  </select>
+
+  <!-- 查询数据库中最新用户信息的Id -->
+  <select id="selectNewId" resultType="java.lang.Integer">
+    select
+    max(p_messid)
+    from message
+  </select>
+
+</mapper>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Dashboard Template for Bootstrap</title>
+    <!-- 小图标 -->
+    <link rel="shortcut icon" th:href="@{/resources/favicon.ico}"/>
+    <link rel="bookmark" th:href="@{/resources/favicon.ico}"/>
+
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.css}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link th:href="@{/asserts/css/dashboard.css}" rel="stylesheet">
+    <!-- 通知栏样式 -->
+    <link th:href="@{/asserts/css/notificationBar.css}" rel="stylesheet">
+</head>
+
+<body>
+<!-- 引入顶部栏 -->
+<div th:replace="commons/bar::topbar"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 引入通知栏 -->
+        <div th:replace="commons/bar::NotificationBar"></div>
+
+        <!-- 引入侧边栏 -->
+        <div th:replace="commons/bar::#sidebar(activeUri='users')"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <h2 th:text="${user != null} ? '用户修改' : '用户添加'">用户添加</h2>
+            <hr>
+
+                <input type="hidden" name="pUid" th:if="${user != null}" th:value="${user.pUid}">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input name="name" type="text" class="form-control" placeholder="name,can login and show."
+                           th:value="${user != null} ? ${user.name}">
+                </div>
+            <div class="form-group">
+                <label>Password</label><br/>
+                <label><font color="red">注意：如果修改密码项，即是重置密码！</font></label><br/>
+                <input name="pwd" type="text" class="form-control" placeholder="password,can login.">
+            </div>
+                <div class="form-group">
+                    <label>Role</label><br/>
+                    <label><font color="red">注意：如果选择了超级用户，即使选择了权限为省级，也不会生效！</font></label><br/>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="role" value="0"
+                               th:checked="${user != null} ? ${user.role == 0}">
+                        <label class="form-check-label">超级用户</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="role"  value="1"
+                               th:checked="${user != null} ? ${user.role == 1}">
+                        <label class="form-check-label">管理员</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Privilege</label><br/>
+                    <label><font color="red">注意：如果选择了省级权限，即使选择了学校，也不会生效！</font></label><br/>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="privilege"  value="0"
+                               th:checked="${user != null} ? ${user.privilege == 0}">
+                        <label class="form-check-label">省级</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="privilege"  value="1"
+                               th:checked="${user != null} ? ${user.privilege == 1}">
+                        <label class="form-check-label">校级</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>School</label>
+                    <!-- 提交的是学校的id -->
+                    <select class="form-control" th:name="uinfo.fSchool" id="school_select">
+                        <option th:selected="${user != null} ? ${user.uinfo.fSchool == school.pSchid}"
+                                th:value="${school.pSchid}" th:each="school : ${schoolData.rows}" th:text="${school.name}">
+                            Default
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Position</label>
+                    <input name="uInfo.position" type="text" class="form-control" placeholder="position."
+                           th:value="${user != null} ? ${user.uinfo.position}">
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input name="uInfo.phone" type="text" class="form-control" placeholder="constant phone."
+                           th:value="${user != null} ? ${user.uinfo.phone}">
+                </div>
+
+                <button type="submit" class="btn btn-primary" onclick="return RootUserSaveOrUpdate($('#user_source').val(), $('#token').val())"
+                        th:text="${user != null} ? '修改' : '添加'">添加</button>
+
+
+        </main>
+    </div>
+</div>
+
+<!-- 引入公共的js  -->
+<div th:replace="commons/js::js"></div>
+<!-- 自定义的js -->
+<script type="text/javascript" th:src="@{/asserts/js/commons.js}" ></script>
+<script type="text/javascript" th:src="@{/asserts/js/user.js}" ></script>
+
+</body>
+</html>

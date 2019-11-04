@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Dashboard Template for Bootstrap</title>
+    <!-- 小图标 -->
+    <link rel="shortcut icon" th:href="@{/resources/favicon.ico}"/>
+    <link rel="bookmark" th:href="@{/resources/favicon.ico}"/>
+
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.css}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link th:href="@{/asserts/css/dashboard.css}" rel="stylesheet">
+    <!-- 通知栏样式 -->
+    <link th:href="@{/asserts/css/notificationBar.css}" rel="stylesheet">
+</head>
+
+<body>
+<!-- 引入顶部栏 -->
+<div th:replace="commons/bar::topbar"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 引入通知栏 -->
+        <div th:replace="commons/bar::NotificationBar"></div>
+
+        <!-- 引入侧边栏 -->
+        <div th:replace="commons/bar::#sidebar(activeUri='professional_man')"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <h2 th:text="${editProf != null} ? '专业修改' : '专业添加'">专业添加</h2>
+            <hr>
+            <input type="hidden" name="pProfid" th:if="${editProf != null}" th:value="${editProf.pProfid}">
+            <div class="form-group">
+                <label>Name</label>
+                <input name="name" type="text" class="form-control" placeholder="name, professional detail name"
+                       th:value="${editProf != null} ? ${editProf.name}">
+            </div>
+            <div class="form-group">
+                <label>Profcategory</label>
+                <!-- 提交的是 专业类别 的id -->
+                <select class="form-control" th:name="editProf.fProfcategory" id="profcategory_select">
+                    <option th:selected="${editProf != null} ? ${editProf.fProfcategory == profcategory.pProfcatid}"
+                            th:value="${profcategory.pProfcatid}" th:each="profcategory : ${profcategoryData.rows}" th:text="${profcategory.name}">
+                        Default
+                    </option>
+                </select>
+            </div>
+            <!-- 省 -->
+            <button type="submit" class="btn btn-primary" onclick="return profSaveOrUpdate($('#user_source').val(), $('#token').val())"
+                    th:if="${session.login_usr_privilege == 0 && session.login_user_role == 1}"
+                    th:text="${editProf != null} ? '修改' : '添加'">添加</button>
+            <!-- 校 -->
+            <button type="submit" class="btn btn-primary" onclick="return profAddRequestApply($('#user_source').val(), $('#token').val())"
+                    th:if="${session.login_usr_privilege == 1 && session.login_user_role == 1}">请求专业添加申请</button>
+
+
+
+        </main>
+
+    </div>
+</div>
+
+<!-- 引入公共的js  -->
+<div th:replace="commons/js::js"></div>
+<!-- 自定义的js --><script type="text/javascript" th:src="@{/asserts/js/professional.js}" ></script>
+
+</body>
+</html>

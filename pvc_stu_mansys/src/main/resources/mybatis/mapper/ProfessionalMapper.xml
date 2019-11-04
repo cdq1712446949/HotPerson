@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenu.pvcstumansys.db.mapper.ProfessionalMapper">
+  <resultMap id="BaseResultMap" type="com.chenu.pvcstumansys.db.bean.Professional">
+    <constructor>
+      <idArg column="p_profid" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="f_profcategory" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    p_profid, name, f_profcategory
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from professional
+    where p_profid = #{pProfid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from professional
+    where p_profid = #{pProfid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="p_profid" keyProperty="pProfid" parameterType="com.chenu.pvcstumansys.db.bean.Professional" useGeneratedKeys="true">
+    insert into professional (name, f_profcategory)
+    values (#{name,jdbcType=VARCHAR}, #{fProfcategory,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" keyColumn="p_profid" keyProperty="pProfid" parameterType="com.chenu.pvcstumansys.db.bean.Professional" useGeneratedKeys="true">
+    insert into professional
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        name,
+      </if>
+      <if test="fProfcategory != null">
+        f_profcategory,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="fProfcategory != null">
+        #{fProfcategory,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chenu.pvcstumansys.db.bean.Professional">
+    update professional
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="fProfcategory != null">
+        f_profcategory = #{fProfcategory,jdbcType=INTEGER},
+      </if>
+    </set>
+    where p_profid = #{pProfid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chenu.pvcstumansys.db.bean.Professional">
+    update professional
+    set name = #{name,jdbcType=VARCHAR},
+      f_profcategory = #{fProfcategory,jdbcType=INTEGER}
+    where p_profid = #{pProfid,jdbcType=INTEGER}
+  </update>
+
+  <!-- 查询所有 -->
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from professional
+  </select>
+
+</mapper>

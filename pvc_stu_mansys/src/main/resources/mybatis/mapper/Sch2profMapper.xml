@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenu.pvcstumansys.db.mapper.Sch2profMapper">
+  <resultMap id="BaseResultMap" type="com.chenu.pvcstumansys.db.bean.Sch2prof">
+    <constructor>
+      <idArg column="p_sch_prof_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="f_school" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="f_professional" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    p_sch_prof_id, f_school, f_professional
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sch2prof
+    where p_sch_prof_id = #{pSchProfId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sch2prof
+    where p_sch_prof_id = #{pSchProfId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="p_sch_prof_id" keyProperty="pSchProfId" parameterType="com.chenu.pvcstumansys.db.bean.Sch2prof" useGeneratedKeys="true">
+    insert into sch2prof (f_school, f_professional)
+    values (#{fSchool,jdbcType=INTEGER}, #{fProfessional,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" keyColumn="p_sch_prof_id" keyProperty="pSchProfId" parameterType="com.chenu.pvcstumansys.db.bean.Sch2prof" useGeneratedKeys="true">
+    insert into sch2prof
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="fSchool != null">
+        f_school,
+      </if>
+      <if test="fProfessional != null">
+        f_professional,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="fSchool != null">
+        #{fSchool,jdbcType=INTEGER},
+      </if>
+      <if test="fProfessional != null">
+        #{fProfessional,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chenu.pvcstumansys.db.bean.Sch2prof">
+    update sch2prof
+    <set>
+      <if test="fSchool != null">
+        f_school = #{fSchool,jdbcType=INTEGER},
+      </if>
+      <if test="fProfessional != null">
+        f_professional = #{fProfessional,jdbcType=INTEGER},
+      </if>
+    </set>
+    where p_sch_prof_id = #{pSchProfId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chenu.pvcstumansys.db.bean.Sch2prof">
+    update sch2prof
+    set f_school = #{fSchool,jdbcType=INTEGER},
+      f_professional = #{fProfessional,jdbcType=INTEGER}
+    where p_sch_prof_id = #{pSchProfId,jdbcType=INTEGER}
+  </update>
+
+  <!-- 查询所有 -->
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sch2prof
+  </select>
+
+  <!-- 查询一个学校的所有专业映射 -->
+  <select id="selectBySchool" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sch2prof
+    where f_school = #{schoolId}
+  </select>
+
+</mapper>

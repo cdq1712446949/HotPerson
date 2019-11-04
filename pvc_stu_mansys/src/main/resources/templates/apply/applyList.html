@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)http://getbootstrap.com/docs/4.0/examples/dashboard/ -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<title>申请管理</title>
+		<!-- 小图标 -->
+		<link rel="shortcut icon" th:href="@{/resources/favicon.ico}"/>
+		<link rel="bookmark" th:href="@{/resources/favicon.ico}"/>
+
+		<!-- Bootstrap core CSS -->
+		<link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.css}" rel="stylesheet">
+		<!-- Custom styles for this template -->
+		<link th:href="@{/asserts/css/dashboard.css}" rel="stylesheet">
+		<!-- 通知栏样式 -->
+		<link th:href="@{/asserts/css/notificationBar.css}" rel="stylesheet">
+	</head>
+
+	<body>
+
+		<!-- 引入顶部栏 -->
+		<div th:replace="commons/bar::topbar"></div>
+
+		<div class="container-fluid">
+			<div class="row">
+				<!-- 引入通知栏 -->
+				<div th:replace="commons/bar::NotificationBar"></div>
+
+				<!-- 引入侧边栏 -->
+				<div th:replace="commons/bar::#sidebar(activeUri='apply_man')"></div>
+
+				<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+					<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+						<h1 class="h2">申请列表</h1>
+						<div class="btn-toolbar mb-2 mb-md-0">
+							<div class="btn-group mr-2">
+								<button class="btn btn-sm btn-outline-secondary">Share</button>
+								<button class="btn btn-sm btn-outline-secondary">Export</button>
+							</div>
+							<button class="btn btn-sm btn-outline-secondary dropdown-toggle">
+							This week
+						  </button>
+						</div>
+					</div>
+
+					<!-- 展示申请列表 -->
+					<div class="table-responsive">
+						<table class="table table-striped table-sm">
+							<thead>
+							<tr>
+								<th>#</th>
+								<th>UserSource</th>
+								<th>Type</th>
+								<th>Note</th>
+								<th>State</th>
+								<th>Result</th>
+								<th>operator</th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr th:each="apply : ${applyData.rows}">
+								<td th:text="${apply.pApplid}"></td>
+								<td th:text="${apply.message.userSource.name}"></td>
+								<td th:text="${apply.message.messtype}"></td>
+								<td th:text="${apply.note}"></td>
+								<td th:text="${apply.state == 0 ? '未处理' : '已处理'}"></td>
+
+								<td th:if="${apply.state == 0}">还未处理</td>
+								<td th:if="${apply.state == 1}" th:text="${apply.result == 0 ? '拒绝' : '同意'}"></td>
+
+								<td>
+									<a class="btn btn-sm btn-primary" href="#"
+									   th:onclick="'return applyDesc(' + ${session.login_usrid} + ',' + '\'' + ${_csrf.token} + '\'' + ','  + ${apply.pApplid} + ')'">详情</a>
+									<a class="btn btn-sm btn-success" href="#" th:if="${apply.state == 0}"
+									   th:onclick="'return accessApply(' + ${session.login_usrid} + ',' + '\'' + ${_csrf.token} + '\'' + ','  + ${apply.pApplid} + ')'">同意</a>
+									<a href="#" class="btn btn-sm btn-danger deleteBtn" th:if="${apply.state == 0}"
+									   th:onclick="'return rejectApply(' + ${session.login_usrid} + ',' + '\'' + ${_csrf.token} + '\'' + ','  + ${apply.pApplid} + ')'">拒绝</a>
+									<a href="#" class="btn btn-sm btn-danger deleteBtn" th:if="${apply.state == 1}"
+									   th:onclick="'return applyRm(' + ${session.login_usrid} + ',' + '\'' + ${_csrf.token} + '\'' + ','  + ${apply.pApplid} + ')'">删除</a>
+								</td>
+
+							</tr>
+							</tbody>
+						</table>
+						<h3 th:if="${applyData.total == 0}" align="center">
+							<font color="red">还没有任何申请...</font>
+						</h3>
+						<p align="right">
+							<a id="ok_state_a" th:class="${state == 0 ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-success'}" href="#"
+							   onclick="return applyManView( $('#user_source').val(), $('#token').val(), 0 )">未处理</a>
+							<a id="no_state_a" th:class="${state == 1 ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-success'}"
+							   onclick="return applyManView( $('#user_source').val(), $('#token').val(), 1 )">已处理</a>
+						<p/>
+
+					</div>
+					
+				</main>
+			</div>
+		</div>
+
+		<!-- 引入公共的js  -->
+		<div th:replace="commons/js::js"></div>
+		<script type="text/javascript" th:src="@{/asserts/js/apply.js}" ></script>
+
+
+	</body>
+
+</html>

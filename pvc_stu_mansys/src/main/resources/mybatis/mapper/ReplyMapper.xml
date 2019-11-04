@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenu.pvcstumansys.db.mapper.ReplyMapper">
+  <resultMap id="BaseResultMap" type="com.chenu.pvcstumansys.db.bean.Reply">
+    <constructor>
+      <idArg column="p_replid" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="f_message" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="note" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="be_viewed" javaType="java.lang.Byte" jdbcType="BIT" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    p_replid, f_message, note, be_viewed
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from reply
+    where p_replid = #{pReplid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from reply
+    where p_replid = #{pReplid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="p_replid" keyProperty="pReplid" parameterType="com.chenu.pvcstumansys.db.bean.Reply" useGeneratedKeys="true">
+    insert into reply (f_message, note, be_viewed
+      )
+    values (#{fMessage,jdbcType=INTEGER}, #{note,jdbcType=VARCHAR}, #{beViewed,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="p_replid" keyProperty="pReplid" parameterType="com.chenu.pvcstumansys.db.bean.Reply" useGeneratedKeys="true">
+    insert into reply
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="fMessage != null">
+        f_message,
+      </if>
+      <if test="note != null">
+        note,
+      </if>
+      <if test="beViewed != null">
+        be_viewed,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="fMessage != null">
+        #{fMessage,jdbcType=INTEGER},
+      </if>
+      <if test="note != null">
+        #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="beViewed != null">
+        #{beViewed,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chenu.pvcstumansys.db.bean.Reply">
+    update reply
+    <set>
+      <if test="fMessage != null">
+        f_message = #{fMessage,jdbcType=INTEGER},
+      </if>
+      <if test="note != null">
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="beViewed != null">
+        be_viewed = #{beViewed,jdbcType=BIT},
+      </if>
+    </set>
+    where p_replid = #{pReplid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chenu.pvcstumansys.db.bean.Reply">
+    update reply
+    set f_message = #{fMessage,jdbcType=INTEGER},
+      note = #{note,jdbcType=VARCHAR},
+      be_viewed = #{beViewed,jdbcType=BIT}
+    where p_replid = #{pReplid,jdbcType=INTEGER}
+  </update>
+
+  <!-- 查询所有 -->
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from reply
+  </select>
+
+  <!-- 查询所有，通过用户源 -->
+  <select id="selectAllByUserSource" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from reply, message
+    where reply.f_message = message.p_messid and message.f_user_source = #{userSource}
+  </select>
+
+</mapper>

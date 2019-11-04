@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<title>Signin Template for Bootstrap</title>
+		<!-- 小图标 -->
+		<link rel="shortcut icon" th:href="@{/resources/favicon.ico}"/>
+		<link rel="bookmark" th:href="@{/resources/favicon.ico}"/>
+
+		<!-- Bootstrap core CSS -->
+		<link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.css}" rel="stylesheet">
+		<!-- 登录页面样式 -->
+		<link th:href="@{/asserts/css/signin.css}" rel="stylesheet">
+	</head>
+
+	<body class="text-center">
+		<form class="form-signin" th:action="@{/usr/login}" method="post">
+			<img class="mb-4" th:src="@{/asserts/images/login-hi.jpg}" alt="" width="72" height="72">
+			<h1 class="h3 mb-3 font-weight-normal" th:text="#{login.tip}">Please sign in</h1>
+			<!-- 提示信息区域，只有消息存在时才显示整个标签 -->
+			<p style="color: red;" th:text="${err_msg}" th:if="${not #strings.isEmpty(err_msg)}"></p>
+			<p style="color: red;" th:text="${suc_msg}" th:if="${not #strings.isEmpty(suc_msg)}"></p>
+
+			<label class="sr-only" th:text="#{login.username}">Username</label>
+			<input type="text" name="username" class="form-control" th:placeholder="#{login.username}" required="" autofocus="">
+			<label class="sr-only" th:text="#{login.password}">Password</label>
+			<input type="password" name="password" class="form-control" th:placeholder="#{login.password}" required="">
+			<div class="checkbox mb-3">
+			<label>
+				<input type="checkbox" name="remember"> [[#{login.remember}]]
+        	</label>
+			</div>
+			<button class="btn btn-lg btn-primary btn-block" type="submit">[[#{login.btn}]]</button>
+			<p class="mt-5 mb-3 text-muted">© 2019-2020</p>
+			<a class="btn btn-sm" th:href="@{/index(l='zh_CN')}">中文</a>
+			<a class="btn btn-sm" th:href="@{/index(l='en_US')}">English</a>
+		</form>
+
+	</body>
+
+</html>

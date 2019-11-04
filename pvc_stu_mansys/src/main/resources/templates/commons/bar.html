@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- 顶部栏 -->
+<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0" th:fragment="topbar"
+    sec:authorize="isAuthenticated()">
+    <!-- 登录用户信息区域 -->
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#" th:if="${session.login_usr_privilege == null}"  sec:authorize="hasRole('ROOT')">欢迎，[[${session.login_usr}]]，您是超级用户</a>
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#" th:if="${session.login_usr_privilege == 1}"  sec:authorize="hasRole('ROOT')">欢迎，[[${session.login_usr}]]，您是校级超级用户</a>
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#" th:if="${session.login_usr_privilege == 0}" sec:authorize="hasRole('USER') && !hasRole('ROOT')">欢迎，[[${session.login_usr}]]，您是省级管理员</a>
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#" th:if="${session.login_usr_privilege == 1}" sec:authorize="hasRole('USER') && !hasRole('ROOT')">欢迎，[[${session.login_usr}]]，您是校级管理员</a>
+    <!-- 搜索框区域 -->
+    <input class="form-control form-control-dark w-75" type="text" placeholder="Search" aria-label="Search">
+    <!-- 通知区域 -->
+    <a href="#" onclick="return notificationChange( $('#user_source').val(), $('#token').val() )">
+        <svg t="1570166575417" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2161" width="27" height="27"><path d="M856.798419 793.112446l-73.742515-129.741923L783.055904 401.843134c0-100.20112-75.31636-208.644971-185.111998-248.378927-5.348821-53.104475-40.835034-91.831498-87.334068-91.831498-46.434565 0-82.048691 38.728046-87.332021 91.831498-109.73424 39.733956-185.049576 148.176784-185.049576 248.378927l0 261.527388-77.329203 136.096654c-5.158487 8.997931-5.03262 20.008706 0.125867 28.944216 5.15951 8.933463 14.724353 14.346753 25.042349 14.346753l184.04162 0c13.528108 65.310472 71.353095 114.51308 140.501988 114.51308 69.213361 0 127.036301-49.202609 140.500964-114.51308l184.04162 0c0.505513 0 0.881067 0 1.322112 0 16.045441 0 29.007661-12.898775 29.007661-28.944216C865.482195 805.697065 862.209662 798.335401 856.798419 793.112446M510.609839 119.708406c10.444886 0 18.875906 7.927553 24.287149 19.756973-8.05342-0.818645-15.85613-2.705622-24.287149-2.705622s-16.232706 1.886977-24.287149 2.705622C491.734956 127.634936 500.165975 119.708406 510.609839 119.708406M510.609839 899.258974c-36.808324 0-67.576071-23.657816-79.532381-56.500828l159.062715 0C578.186933 875.600135 547.482631 899.258974 510.609839 899.258974M235.90022 784.807293l56.502875-99.476619c2.515287-4.28049 3.89982-9.314133 3.89982-14.34573L296.302915 401.843134c0-97.747231 91.611487-207.070102 214.306924-207.070102 122.694413 0 214.431767 109.322871 214.431767 207.070102L725.041606 670.984944c0 5.031597 1.322112 10.06524 3.774977 14.34573l56.565297 99.476619L235.90022 784.807293z" p-id="2162" fill="#1296db"></path></svg>
+    </a>
+    <!-- 注销 -->
+    <ul class="navbar-nav px-3">
+        <form id="logout_form" th:action="@{/logout}" method="post"></form>
+        <li class="nav-item text-nowrap">
+            <a class="nav-link" onclick="return logout()" href="#">注销</a>
+        </li>
+    </ul>
+</nav>
+<!-- 通知信息 -->
+<div id="notificationBar" hidden="" th:fragment="NotificationBar">
+    <nav>
+        <ul class="nav flex-column" align="center">
+            <!-- 通知item -->
+            <!--<li class="navbar-fixed-bottom notification-item"><a class="btn btn-success form-control" href="#" onclick="return clearReply()">清空通知栏</a></li>-->
+            <!--<li class="nav-item notification-item"><a style="display : inline-block;" class="nav-link active" href="#">通知</a><a style="display : inline-block; float: right;" href="#" class="btn btn-sm btn-danger deleteBtn" onclick="return replyfRm()">删除</a><hr></li>-->
+        </ul>
+    </nav>
+</div>
+
+<!-- 侧边栏 -->
+<nav class="col-md-2 d-none d-md-block bg-light sidebar" id="sidebar">
+    <div class="sidebar-sticky">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active"
+                   th:class="${activeUri == 'main' ?  'nav-link active' : 'nav-link'}"
+                   href="#" th:href="@{/}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    主页 <span class="sr-only">(current)</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active"
+                   th:class="${activeUri == 'apply_man' ?  'nav-link active' : 'nav-link'}" href="#"
+                   th:if="${session.login_usr_privilege == 0 && session.login_user_role == 1}"
+                   onclick="return applyManView( $('#user_source').val(), $('#token').val(), 0 )">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    申请管理
+                </a>
+            </li>
+            <!-- 用户管理：只有 root 用户才能有此功能 -->
+            <li class="nav-item" sec:authorize="hasRole('ROOT')">
+                <!-- 唯一的root用户 -->
+                <a class="nav-link" href="#" th:class="${activeUri == 'users' ?  'nav-link active' : 'nav-link'}"
+                   th:if="${session.login_usr_privilege == null}"
+                   onclick="return users( $('#user_source').val(), $('#token').val(), 0, 0 )">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    用户管理
+                </a>
+                <!-- 校级root用户 -->
+                <a class="nav-link" href="#" th:class="${activeUri == 'users' ?  'nav-link active' : 'nav-link'}"
+                   th:if="${session.login_usr_privilege == 1}"
+                   onclick="return users( $('#user_source').val(), $('#token').val(), 1, 0 )">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    用户管理
+                </a>
+            </li>
+            <!-- 专业库管理，省管理员才能管理 -->
+            <li class="nav-item">
+                <a class="nav-link" href="#" th:class="${activeUri == 'professional_man' ?  'nav-link active' : 'nav-link'}"
+                   th:if="${session.login_usr_privilege == 0 && session.login_user_role == 1}"
+                   onclick="return professionalMan( $('#user_source').val(), $('#token').val() )">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2">
+                        <line x1="18" y1="20" x2="18" y2="10"></line>
+                        <line x1="12" y1="20" x2="12" y2="4"></line>
+                        <line x1="6" y1="20" x2="6" y2="14"></line>
+                    </svg>
+                    专业库管理
+                </a>
+            </li>
+            <!-- 学校专业库管理，省级：可以直接管理；校级：提交申请 -->
+            <li class="nav-item">
+                <a class="nav-link" href="#" th:class="${activeUri == 'sch2prof_man' ?  'nav-link active' : 'nav-link'}"
+                   th:if="${session.login_user_role != 0 && session.login_usrid != 0}"
+                   onclick="return sch2proflMan( $('#user_source').val(), $('#token').val() )">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2">
+                        <line x1="18" y1="20" x2="18" y2="10"></line>
+                        <line x1="12" y1="20" x2="12" y2="4"></line>
+                        <line x1="6" y1="20" x2="6" y2="14"></line>
+                    </svg>
+                    学校专业库管理
+                </a>
+            </li>
+            <!-- 学籍管理：省级：通过同意拒绝申请管理；校级：只能提交申请 -->
+            <li class="nav-item">
+                <a class="nav-link" href="#" th:class="${activeUri == 'student_man' ?  'nav-link active' : 'nav-link'}"
+                   th:if="${session.login_usr_privilege == 1 && session.login_user_role == 1}"
+                   onclick="return studentlMan( $('#user_source').val(), $('#token').val() )">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layers">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                        <polyline points="2 17 12 22 22 17"></polyline>
+                        <polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                    学籍管理
+                </a>
+            </li>
+
+        </ul>
+
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+            <span>Saved reports</span>
+            <a class="d-flex align-items-center text-muted" href="http://getbootstrap.com/docs/4.0/examples/dashboard/#">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-circle"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+            </a>
+        </h6>
+        <ul class="nav flex-column mb-2">
+            <li class="nav-item">
+                <a class="nav-link" href="http://getbootstrap.com/docs/4.0/examples/dashboard/#">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                    Current month
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="http://getbootstrap.com/docs/4.0/examples/dashboard/#">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                    Last quarter
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- 隐藏的表单元素 -->
+    <input id="token" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden" />
+    <input id="user_source" type="hidden" th:name="fUserSource" th:value="${session.login_usrid}" />
+
+</nav>
+
+</body>
+</html>
